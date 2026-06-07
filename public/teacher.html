@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Teacher</title>
+<style>
+body{font-family:Arial;padding:20px}
+button{padding:10px;margin:5px}
+</style>
+</head>
+<body>
+<h1>Teacher Dashboard</h1>
+
+<button onclick="start()">Start Round</button>
+<button onclick="reveal()">Reveal</button>
+
+<h2>Leaderboard</h2>
+<pre id="board"></pre>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket=io();
+
+function start(){
+ socket.emit('startRound',{
+ options:[
+ {name:'Safe',chance:80,reward:10},
+ {name:'Medium',chance:50,reward:20},
+ {name:'Risky',chance:20,reward:60}
+ ]
+ });
+}
+
+function reveal(){ socket.emit('reveal'); }
+
+socket.on('leaderboard',players=>{
+ players.sort((a,b)=>b.score-a.score);
+ document.getElementById('board').textContent =
+ players.map(p=>`${p.name}: ${p.score}`).join('\n');
+});
+</script>
+</body>
+</html>

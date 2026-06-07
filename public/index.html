@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student</title>
+<style>
+body{font-family:Arial;text-align:center;background:#4facfe;color:white}
+.card{background:white;color:black;padding:20px;margin:10px;border-radius:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Treasure Choice</h1>
+<div id="join">
+<input id="name" placeholder="Your name">
+<button onclick="join()">Join</button>
+</div>
+<div id="game"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket=io();
+function join(){
+ const n=document.getElementById('name').value;
+ socket.emit('join',n);
+ document.getElementById('join').style.display='none';
+}
+
+socket.on('roundStarted',round=>{
+ let html='<h2>Choose</h2>';
+ round.options.forEach((o,i)=>{
+ html+=`<div class="card" onclick="pick(${i})">${o.name}<br>${o.chance}% chance<br>${o.reward} pts</div>`;
+ });
+ document.getElementById('game').innerHTML=html;
+});
+
+function pick(i){
+ socket.emit('choice',i);
+ document.getElementById('game').innerHTML='<h2>Choice submitted!</h2>';
+}
+</script>
+</body>
+</html>
