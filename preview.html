@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treasure Choice Game</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    color:white;
+    text-align:center;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+h1{
+    font-size:3rem;
+}
+
+.score{
+    font-size:1.5rem;
+    margin-bottom:20px;
+}
+
+.chests{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.chest{
+    width:220px;
+    background:white;
+    color:#333;
+    border-radius:20px;
+    padding:20px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.chest:hover{
+    transform:scale(1.05);
+}
+
+.chest h2{
+    margin:10px 0;
+}
+
+.result{
+    margin-top:30px;
+    font-size:2rem;
+    min-height:60px;
+}
+
+button{
+    margin-top:20px;
+    padding:15px 30px;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.leaderboard{
+    margin-top:30px;
+    background:rgba(255,255,255,.2);
+    padding:20px;
+    border-radius:20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🏆 Treasure Choice</h1>
+
+<div class="score">
+Score: <span id="score">0</span>
+</div>
+
+<div class="chests">
+
+<div class="chest" onclick="play(80,10,'Safe Chest')">
+<h2>🟢 Safe Chest</h2>
+<p>80% Chance</p>
+<p>+10 Points</p>
+</div>
+
+<div class="chest" onclick="play(50,20,'Medium Chest')">
+<h2>🟡 Medium Chest</h2>
+<p>50% Chance</p>
+<p>+20 Points</p>
+</div>
+
+<div class="chest" onclick="play(20,60,'Risky Chest')">
+<h2>🔴 Risky Chest</h2>
+<p>20% Chance</p>
+<p>+60 Points</p>
+</div>
+
+</div>
+
+<div class="result" id="result">
+Choose a chest!
+</div>
+
+<button onclick="nextRound()">Next Round</button>
+
+<div class="leaderboard">
+<h2>Game Stats</h2>
+<p>Rounds Played: <span id="rounds">0</span></p>
+<p>Wins: <span id="wins">0</span></p>
+<p>Losses: <span id="losses">0</span></p>
+</div>
+
+</div>
+
+<script>
+
+let score = 0;
+let rounds = 0;
+let wins = 0;
+let losses = 0;
+let played = false;
+
+function play(chance,reward,name){
+
+    if(played) return;
+
+    played = true;
+    rounds++;
+
+    const roll = Math.random()*100;
+
+    if(roll < chance){
+        score += reward;
+        wins++;
+
+        document.getElementById("result").innerHTML =
+        `🎉 SUCCESS!<br>${name}<br>+${reward} points`;
+    }
+    else{
+        losses++;
+
+        document.getElementById("result").innerHTML =
+        `💥 FAILED!<br>${name}<br>+0 points`;
+    }
+
+    updateUI();
+}
+
+function nextRound(){
+    played = false;
+    document.getElementById("result").innerHTML =
+    "Choose a chest!";
+}
+
+function updateUI(){
+    document.getElementById("score").textContent = score;
+    document.getElementById("rounds").textContent = rounds;
+    document.getElementById("wins").textContent = wins;
+    document.getElementById("losses").textContent = losses;
+}
+
+</script>
+
+</body>
+</html>
